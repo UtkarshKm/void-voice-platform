@@ -40,5 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-#vs code
+#vs code settings
 /.vscode/
+/.qodo/
