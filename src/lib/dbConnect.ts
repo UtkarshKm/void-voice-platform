@@ -12,15 +12,15 @@ async function connectToDb(): Promise<void> {
 		return;
 	}
 
+	const uri = process.env.MONGODB_URI as string;
+	if (!uri) {
+		console.error("MONGODB_URI environment variable is not set.");
+		process.exit(1);
+	}
+
 	try {
-		const db = await mongoose.connect(
-			(process.env.MONGODB_URI as string) || ""
-		);
-        // console.log( "db : " ,db);
-        
+		const db = await mongoose.connect(uri);
 		connection.isConnected = db.connections[0].readyState;
-        // console.log( "connection : " ,connection);
-        
 		console.log("Connected to the database");
 	} catch (error) {
 		console.error("Error connecting to the database:", error);
