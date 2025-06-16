@@ -5,7 +5,7 @@ import {z} from "zod";
 import Link from "next/link";
 import React, {useState} from "react";
 import {useRouter} from "next/navigation";
-import {signIn, getSession} from "next-auth/react";
+import {signIn} from "next-auth/react";
 import {toast} from "sonner";
 import {
 	Form,
@@ -56,8 +56,7 @@ export default function SignInPage() {
 					toast.error("Sign in failed. Please try again.");
 				}
 			} else if (result?.ok) {
-				// Get session to check if user is verified
-				const session = await getSession();
+				
 				toast.success("Welcome back!");
 
 				// Redirect based on user status or to dashboard
