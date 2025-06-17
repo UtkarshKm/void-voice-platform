@@ -17,17 +17,14 @@ import {
 } from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import {Loader2, LogIn, Eye, EyeOff} from "lucide-react";
+import {Loader2, LogIn} from "lucide-react"; // ✅ Removed Eye icons
+import { signInSchema } from "@/schemas/signInSchema";
 
-// Sign in schema
-const signInSchema = z.object({
-	identifier: z.string().min(1, "Email or username is required"),
-	password: z.string().min(1, "Password is required"),
-});
+
 
 export default function SignInPage() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [showPassword, setShowPassword] = useState(false);
+	// ✅ Removed showPassword state
 	const router = useRouter();
 
 	const form = useForm<z.infer<typeof signInSchema>>({
@@ -57,10 +54,9 @@ export default function SignInPage() {
 				}
 			} else if (result?.ok) {
 				const session = await getSession();
-				toast.success("Welcome back!");
-				 toast.success(`Welcome back, ${session?.user?.username}!`);
-
-				// Redirect based on user status or to dashboard
+				toast.success(
+					`Welcome back, ${session?.user?.username || session?.user?.name || "User"}!`
+				);
 				router.replace("/dashboard");
 			}
 		} catch (error) {
@@ -105,6 +101,9 @@ export default function SignInPage() {
 											placeholder="Enter your email or username"
 											className="bg-background border-input"
 											autoComplete="username"
+											spellCheck="false"
+											autoCapitalize="off"
+											autoCorrect="off"
 										/>
 									</FormControl>
 									<FormMessage />
@@ -121,28 +120,14 @@ export default function SignInPage() {
 										Password
 									</FormLabel>
 									<FormControl>
-										<div className="relative">
-											<Input
-												{...field}
-												type={showPassword ? "text" : "password"}
-												placeholder="Enter your password"
-												className="pr-10 bg-background border-input"
-												autoComplete="current-password"
-											/>
-											<Button
-												type="button"
-												variant="ghost"
-												size="sm"
-												className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-												onClick={() => setShowPassword(!showPassword)}
-											>
-												{showPassword ? (
-													<EyeOff className="h-4 w-4 text-muted-foreground" />
-												) : (
-													<Eye className="h-4 w-4 text-muted-foreground" />
-												)}
-											</Button>
-										</div>
+										{/* ✅ Simple password input - no custom toggle */}
+										<Input
+											{...field}
+											type="password"
+											placeholder="Enter your password"
+											className="bg-background border-input"
+											autoComplete="current-password"
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -153,14 +138,14 @@ export default function SignInPage() {
 						<div className="text-right">
 							<Link
 								href="/forgot-password"
-								className="text-sm text-primary hover:text-primary/80 transition-colors"
+								className="text-sm text-primary hover:text-primary/80 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
 							>
 								Forgot your password?
 							</Link>
 						</div>
 
 						<Button
-							className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+							className="w-full bg-primary hover:bg-primary/90 text-primary-foreground focus:ring-2 focus:ring-primary focus:ring-offset-2"
 							disabled={isSubmitting}
 							type="submit"
 						>
@@ -194,7 +179,7 @@ export default function SignInPage() {
 						Don&apos;t have an account?{" "}
 						<Link
 							href="/sign-up"
-							className="text-primary hover:text-primary/80 font-medium transition-colors"
+							className="text-primary hover:text-primary/80 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
 						>
 							Create one now
 						</Link>

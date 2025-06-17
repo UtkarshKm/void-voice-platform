@@ -8,8 +8,10 @@ export async function POST(request: Request) {
 	await connectToDb();
 	const session = await getServerSession(authOptions);
 	const user: User = session?.user as User;
+
 	console.log("Received request to accept message.");
 	console.log("User:", user);
+
 	if (!session || !session.user) {
 		return Response.json(
 			{
@@ -19,14 +21,20 @@ export async function POST(request: Request) {
 			{status: 401}
 		);
 	}
-	const userId = user._id;
-	const {acceptedMessages} = await request.json();
 
-	if (typeof acceptedMessages !== 'boolean') {
+	const userId = user._id;
+
+	// ✅ Changed from 'acceptedMessages' to 'acceptMessages'
+	const {acceptMessages} = await request.json();
+
+	console.log("Received acceptMessages:", acceptMessages); // Debug log
+
+	// ✅ Updated variable name
+	if (typeof acceptMessages !== "boolean") {
 		return Response.json(
 			{
 				success: false,
-				message: "Invalid input for acceptedMessages. Must be a boolean.",
+				message: "Invalid input for acceptMessages. Must be a boolean.",
 			},
 			{status: 400}
 		);
@@ -34,9 +42,10 @@ export async function POST(request: Request) {
 
 	try {
 		const updatedUser = await UserModel.findOneAndUpdate(
-			{ _id: userId }, // Corrected: Use query object for userId
+			{_id: userId},
 			{
-				isAcceptingMessages: acceptedMessages,
+				// ✅ Use the correct variable
+				isAcceptingMessages: acceptMessages,
 			},
 			{new: true}
 		);
