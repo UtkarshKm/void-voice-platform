@@ -25,9 +25,9 @@ export default function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
-}>) {
+}>) { 
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning= {true} >
 			<AuthProvider>
 				<body
 					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
