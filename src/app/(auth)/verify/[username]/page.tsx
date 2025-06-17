@@ -19,14 +19,15 @@ import {
 } from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import {Loader2, Mail, ArrowLeft} from "lucide-react";
-import Link from "next/link";
+import {Loader2, Mail} from "lucide-react";
+// import Link from "next/link";
+// import {ArrowLeft} from "lucide-react";
 
 function VerifyPage() {
 	const router = useRouter();
 	const params = useParams<{username: string}>();
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [isResending, setIsResending] = useState(false);
+	// const [isResending, setIsResending] = useState(false);
 
 	const form = useForm<z.infer<typeof verifySchema>>({
 		resolver: zodResolver(verifySchema),
