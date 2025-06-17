@@ -9,8 +9,10 @@ export async function GET() {
 	await connectToDb();
 	const session = await getServerSession(authOptions);
 	const user: User = session?.user as User;
+
 	console.log("Received request to get messages.");
 	console.log("User:", user);
+
 	if (!session || !session.user) {
 		return Response.json(
 			{
@@ -20,7 +22,9 @@ export async function GET() {
 			{status: 401}
 		);
 	}
+
 	const userId = new mongoose.Types.ObjectId(user._id);
+
 	try {
 		const foundUser = await UserModel.aggregate([
 			{
@@ -32,30 +36,33 @@ export async function GET() {
 			{$sort: {"messages.createdAt": -1}},
 			{$group: {_id: "$_id", messages: {$push: "$messages"}}},
 		]);
+
 		if (!foundUser || foundUser.length === 0) {
 			return Response.json(
 				{
-					success: false,
-					message: "User not found",
+					success: true,
+					message: "No messages found",
+					messages: [], // ✅ Return empty array instead of 404
 				},
-				{status: 404}
+				{status: 200}
 			);
 		}
+
 		return Response.json(
 			{
 				success: true,
 				message: "Messages retrieved successfully",
-				data: foundUser[0].messages,
+				messages: foundUser[0].messages, // ✅ Changed from 'data' to 'messages'
 			},
 			{status: 200}
 		);
 	} catch (error) {
-		console.log(" Error in get messages", error);
+		console.log("Error in get messages", error);
 		return Response.json(
 			{
 				success: false,
 				message: "Error in get messages",
-				error: error,
+				messages: [], // ✅ Include empty messages array for consistency
 			},
 			{status: 500}
 		);
